@@ -77,7 +77,7 @@ describe('AboutComponent', () => {
 
     de = fixture.debugElement.query(By.css('h2[id=serverWarningError]'));
     el = de.nativeElement;
-    expect(el.textContent).toContain('Error occurred when attempting to obtain about info from server.');
+    expect(el.textContent).toContain('Obtaining about info from server.');
   });
 
   it('Should navigate to the details page.', () => {

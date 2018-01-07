@@ -58,8 +58,8 @@ describe('AboutDetailsComponent', () => {
     validateColumnValues('dataFlowVersionTable', ['FOO', 'BAR'], 1);
 
     // Verify Enabled Features
-    validateColumnValues('enabledFeaturesTable', ['Analytics', 'Streams', 'Tasks'], 0);
-    validateSpansExists(['analyticsEnabled', 'streamsEnabled', 'streamsEnabled']);
+    validateColumnValues('enabledFeaturesTable', ['Analytics', 'Streams', 'Tasks', 'Skipper Mode'], 0);
+    validateSpansExists(['analyticsEnabled', 'streamsEnabled', 'tasksEnabled', 'skipperEnabled']);
 
     // Verify Security Information
     validateColumnValues('securityInformationTable', ['Authentication', 'Authorization',
@@ -69,8 +69,11 @@ describe('AboutDetailsComponent', () => {
     validateTdValue('roles', 'base_role');
 
     // Starting Version
-    validateColumnValues('versionInformationTable', ['Implementation', 'Core', 'Dashboard'], 0);
-    validateColumnValues('versionInformationTable', ['BAR (FOO)', 'BOO (BAZ)', 'QIX (QUE)'], 1);
+    validateColumnValues('versionInformationTable', ['Implementation',
+      'Core', 'Dashboard',
+      'Shell', 'Shell Checksum Sha1', 'Shell Checksum Sha256'], 0);
+    validateColumnValues('versionInformationTable',
+      ['BAR (FOO)', 'BOO (BAZ)', 'QIX (QUE)', 'QUUX (QUX)', 'checksumSample1', 'checksumSample256'], 1);
 
     // App Deployer Table
     validateColumnValues('appDeployerTable', ['Implementation Version', 'Name', 'Spi Version',
@@ -102,8 +105,8 @@ describe('AboutDetailsComponent', () => {
     expect(component).toBeTruthy();
 
     // Verify Enabled Features
-    validateColumnValues('enabledFeaturesTable', ['Analytics', 'Streams', 'Tasks'], 0);
-    validateSpansExists(['analyticsDisabled', 'streamsDisabled', 'streamsDisabled']);
+    validateColumnValues('enabledFeaturesTable', ['Analytics', 'Streams', 'Tasks', 'Skipper Mode'], 0);
+    validateSpansExists(['analyticsDisabled', 'streamsDisabled', 'tasksDisabled', 'skipperDisabled']);
 
     // Verify Security Information
     validateColumnValues('securityInformationTable', ['Authentication', 'Authorization',
@@ -130,7 +133,7 @@ describe('AboutDetailsComponent', () => {
 
     de = fixture.debugElement.query(By.css('h2[id=serverWarningError]'));
     el = de.nativeElement;
-    expect(el.textContent).toContain('Error occurred when attempting to obtain about info from server.');
+    expect(el.textContent).toContain('Obtaining about info from server.');
   });
 
   it('Should navigate to the details page.', () => {

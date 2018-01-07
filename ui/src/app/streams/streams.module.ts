@@ -16,14 +16,17 @@ import { ProgressbarModule } from 'ngx-bootstrap';
 import { MetamodelService } from './flo/metamodel.service';
 import { RenderService } from './flo/render.service';
 import { EditorService } from './flo/editor.service';
-import { StreamCreateDialogComponent } from './stream-create/stream-create-dialog.component';
-import { PropertiesDialogComponent } from './flo/properties/properties-dialog.component';
+import { StreamCreateDialogComponent } from './stream-create-dialog/stream-create-dialog.component';
+import { StreamPropertiesDialogComponent } from './flo/properties/stream-properties-dialog.component';
 import { ContentAssistService } from './flo/content-assist.service';
 import { TooltipModule } from 'ngx-bootstrap';
 import { NodeComponent } from './flo/node/node.component';
-import { DecorationComponent } from './flo/decoration/decoration.component';
-import { HandleComponent } from './flo/handle/handle.component';
-import { StreamGraphViewComponent } from './stream-graph-view/stream-graph-view.component';
+import { DecorationComponent } from '../shared/flo/decoration/decoration.component';
+import { HandleComponent } from '../shared/flo/handle/handle.component';
+import { StreamGraphDefinitionComponent } from './stream-graph-definition/stream-graph-definition.component';
+import { InstanceDotComponent } from './flo/instance-dot/instance-dot.component';
+import { MessageRateComponent } from './flo/message-rate/message-rate.component';
+import {DeploymentPropertiesComponent} from './stream-definitions/deployment-properties/deployment-properties.component';
 
 @NgModule({
   imports: [
@@ -46,18 +49,21 @@ import { StreamGraphViewComponent } from './stream-graph-view/stream-graph-view.
     StreamDetailsComponent,
     StreamDeployComponent,
     StreamCreateDialogComponent,
-    PropertiesDialogComponent,
+    StreamPropertiesDialogComponent,
     NodeComponent,
-    DecorationComponent,
-    HandleComponent,
-    StreamGraphViewComponent
+    StreamGraphDefinitionComponent,
+    InstanceDotComponent,
+    MessageRateComponent,
+    DeploymentPropertiesComponent
   ],
   entryComponents: [
     StreamCreateDialogComponent,
-    PropertiesDialogComponent,
+    StreamPropertiesDialogComponent,
     NodeComponent,
     DecorationComponent,
-    HandleComponent
+    HandleComponent,
+    InstanceDotComponent,
+    MessageRateComponent
   ],
   providers: [
     StreamsService,

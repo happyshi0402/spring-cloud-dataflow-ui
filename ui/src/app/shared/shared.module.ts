@@ -23,6 +23,7 @@ import { PropertyTableComponent } from './components/property-table/property-tab
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { TabComponent, TabsComponent } from './components/tabs.component';
 
@@ -31,6 +32,12 @@ import { SharedAppsService } from '../shared/services/shared-apps.service';
 import { DataflowDateTimePipe } from './pipes/dataflow-date-time.pipe';
 import { DataflowDurationPipe } from './pipes/dataflow-duration.pipe';
 import { MapValuesPipe } from './pipes/map-values-pipe.pipe';
+import { FloModule } from 'spring-flo';
+import { HandleComponent } from './flo/handle/handle.component';
+import { DecorationComponent } from './flo/decoration/decoration.component';
+import { PropertiesDialogComponent } from './flo/properties/properties-dialog.component';
+import { GraphViewComponent } from './flo/graph-view/graph-view.component';
+import { SharedAboutService } from './services/shared-about.service';
 
 const busyConfig: BusyConfig = {
     message: 'Processing..',
@@ -53,8 +60,10 @@ const busyConfig: BusyConfig = {
     FormsModule,
     HttpModule,
     ReactiveFormsModule,
+    FloModule,
     BusyModule.forRoot(busyConfig),
     ModalModule.forRoot(),
+    TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxPaginationModule,
     ToastyModule.forRoot(),
@@ -72,12 +81,19 @@ const busyConfig: BusyConfig = {
     TabComponent,
     DataflowDateTimePipe,
     DataflowDurationPipe,
-    MapValuesPipe],
+    MapValuesPipe,
+    DecorationComponent,
+    HandleComponent,
+    PropertiesDialogComponent,
+    GraphViewComponent
+  ],
   providers: [
     StompService,
     SharedAppsService,
+    SharedAboutService,
     ParserService,
-    ErrorHandler],
+    ErrorHandler
+  ],
   exports: [
     BusyModule,
     ClickOutsideDirective,
@@ -94,7 +110,11 @@ const busyConfig: BusyConfig = {
     TriStateCheckboxComponent,
     TriStateButtonComponent,
     PropertyTableComponent,
-    ProgressbarModule
+    ProgressbarModule,
+    DecorationComponent,
+    HandleComponent,
+    PropertiesDialogComponent,
+    GraphViewComponent
   ]
 })
 export class SharedModule { }

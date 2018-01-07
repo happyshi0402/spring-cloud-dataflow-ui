@@ -6,6 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 import { StreamDefinition } from './model/stream-definition';
+import { StreamMetrics } from './model/stream-metrics';
 import { Page } from '../shared/model/page';
 import { ErrorHandler } from '../shared/model/error-handler';
 import { HttpUtils, URL_QUERY_ENCODER } from '../shared/support/http.utils';
@@ -16,6 +17,7 @@ import { HttpUtils, URL_QUERY_ENCODER } from '../shared/support/http.utils';
  * @author Janne Valkealahti
  * @author Gunnar Hillert
  * @author Glenn Renfro
+ * @author Damien Vitrac
  *
  */
 @Injectable()
@@ -96,7 +98,7 @@ export class StreamsService {
     if (deploy) {
       params.set('deploy', deploy.toString());
     }
-    options.search = params;
+    options.params = params;
     return this.http.post(this.streamDefinitionsUrl, null, options);
   }
 
@@ -115,6 +117,14 @@ export class StreamsService {
       .catch(this.errorHandler.handleError);
   }
 
+  destroyMultipleStreamDefinitions(streamDefinitions: StreamDefinition[]): Observable<Response[]> {
+    const observables: Observable<Response>[] = [];
+    for (const streamDefinition of streamDefinitions) {
+      observables.push(this.destroyDefinition(streamDefinition));
+    }
+    return Observable.forkJoin(observables);
+  }
+
   /**
    * Calls the Spring Cloud Data Flow server to undeploy the {@link StreamDefinition}.
    * @param streamDefinition
@@ -127,6 +137,15 @@ export class StreamsService {
       .catch(this.errorHandler.handleError);
   }
 
+  undeployMultipleStreamDefinitions(streamDefinitions: StreamDefinition[]): Observable<Response[]> {
+    const observables: Observable<Response>[] = [];
+    for (const streamDefinition of streamDefinitions) {
+      observables.push(this.undeployDefinition(streamDefinition));
+    }
+    return Observable.forkJoin(observables);
+  }
+
+
   /**
    * Posts a request to the data flow server to deploy the stream associated with the streamDefinitionName.
    * @param streamDefinitionName the name of the stream to deploy.
@@ -137,6 +156,45 @@ export class StreamsService {
     console.log('Deploying...', streamDefinitionName);
     const options = HttpUtils.getDefaultRequestOptions();
     return this.http.post('/streams/deployments/' + streamDefinitionName, propertiesAsMap, options)
+      .catch(this.errorHandler.handleError);
+  }
+
+  deployMultipleStreamDefinitions(streamDefinitions: StreamDefinition[]): Observable<Response[]> {
+    const observables: Observable<Response>[] = [];
+    for (const streamDefinition of streamDefinitions) {
+      observables.push(this.deployDefinition(streamDefinition.name, streamDefinition.deploymentProperties));
+    }
+    return Observable.forkJoin(observables);
+  }
+
+  getRelatedDefinitions(streamName: string, nested?: boolean): Observable<StreamDefinition[]> {
+    const options = HttpUtils.getDefaultRequestOptions();
+    if (nested) {
+      const params =  new URLSearchParams('', URL_QUERY_ENCODER);
+      params.append('nested', nested.toString());
+      options.params = params;
+    }
+    return this.http.get(`/streams/definitions/${streamName}/related`, options)
+      .map(res => this.extractData(res).items)
+      .catch(this.errorHandler.handleError);
+  }
+
+  metrics(streamNames?: string[]): Observable<StreamMetrics[]> {
+    const options = HttpUtils.getDefaultRequestOptions();
+    if (streamNames) {
+      const params =  new URLSearchParams('', URL_QUERY_ENCODER);
+      params.append('names', streamNames.join(','));
+      options.params = params;
+    }
+    return this.http.get('/metrics/streams', options)
+      .map(res => {
+        const data = res.json();
+        if (Array.isArray(data)) {
+          return data.map(entry => new StreamMetrics().deserialize(entry));
+        } else {
+          return [];
+        }
+      })
       .catch(this.errorHandler.handleError);
   }
 

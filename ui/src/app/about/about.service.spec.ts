@@ -2,6 +2,7 @@ import { AboutService } from './about.service';
 import { Observable } from 'rxjs/Rx';
 import { ErrorHandler } from '../shared/model/error-handler';
 import { Response, ResponseOptions } from '@angular/http';
+import { SharedAboutService } from '../shared/services/shared-about.service';
 
 describe('AboutService', () => {
 
@@ -10,24 +11,38 @@ describe('AboutService', () => {
       {
           'analyticsEnabled': true,
           'streamsEnabled': true,
-          'tasksEnabled': true
+          'tasksEnabled': true,
+          'skipperEnabled': true
       },
       'versionInfo':
       {
-          'implementation':
+          'implementationDependency':
           {
               'name': 'spring-cloud-dataflow-server-local',
-              'version': '1.2.3.BUILD-SNAPSHOT'
+              'version': '1.2.3.BUILD-SNAPSHOT',
+              'checksumSha1': 'checksumSample1',
+              'checksumSha256': 'checksumSample256'
           },
-          'core':
+          'coreDependency':
           {
               'name': 'Spring Cloud Data Flow Core',
-              'version': '1.2.3.BUILD-SNAPSHOT'
+              'version': '1.2.3.BUILD-SNAPSHOT',
+              'checksumSha1': 'checksumSample1',
+              'checksumSha256': 'checksumSample256'
           },
-          'dashboard':
+          'dashboardDependency':
           {
               'name': 'Spring Cloud Dataflow UI',
-              'version': '1.2.1.RELEASE'
+              'version': '1.2.3.RELEASE',
+              'checksumSha1': 'checksumSample1',
+              'checksumSha256': 'checksumSample256'
+          },
+        'shellDependency':
+          {
+            'name': 'Spring Cloud Dataflow Shell',
+            'version': '1.2.3.RELEASE',
+            'checksumSha1': 'checksumSample1',
+            'checksumSha256': 'checksumSample256'
           }
       },
       'securityInfo':
@@ -88,7 +103,8 @@ describe('AboutService', () => {
   beforeEach(() => {
     this.mockHttp = jasmine.createSpyObj('mockHttp', ['get']);
     const errorHandler = new ErrorHandler();
-    this.aboutService = new AboutService(this.mockHttp, errorHandler);
+    this.sharedAboutService = new SharedAboutService(this.mockHttp, errorHandler);
+    this.aboutService = new AboutService(this.sharedAboutService, this.mockHttp, errorHandler);
   });
 
   it('should call the about service with the right url', () => {

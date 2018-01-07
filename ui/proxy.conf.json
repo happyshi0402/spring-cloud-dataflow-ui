@@ -24,6 +24,11 @@
         "secure": false,
         "logLevel": "debug"
     },
+    "/logout" : {
+        "target": "http://localhost:9393/",
+        "secure": false,
+        "logLevel": "debug"
+    },
     "/metrics" : {
         "target": "http://localhost:9393/",
         "secure": false,
@@ -40,6 +45,11 @@
         "logLevel": "debug"
     },
     "/tasks" : {
+        "target": "http://localhost:9393/",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/tools" : {
         "target": "http://localhost:9393/",
         "secure": false,
         "logLevel": "debug"

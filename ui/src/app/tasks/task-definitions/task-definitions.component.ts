@@ -107,11 +107,20 @@ export class TaskDefinitionsComponent implements OnInit {
         this.cancel();
         this.toastyService.success('Successfully destroyed task definition "'
           + taskDefinition.name + '"');
+        this.loadTaskDefinitions();
       },
       error => {
         this.toastyService.error(error);
       }
     );
+  }
+
+  /**
+   * Route to {@link TaskDefinition} details page.
+   * @param item the task definition to be displayed.
+   */
+  details(taskDefinition: TaskDefinition) {
+    this.router.navigate(['tasks/definitions/' + taskDefinition.name]);
   }
 
   /**

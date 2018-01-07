@@ -4,11 +4,7 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { StreamsService } from '../streams.service';
 import { ToastyService } from 'ng2-toasty';
 import { validateDeploymentProperties } from './stream-deploy-validators';
-
-@Component({
-  selector: 'app-stream-deploy',
-  templateUrl: './stream-deploy.component.html',
-})
+import { Subscription } from 'rxjs/Subscription';
 
 /**
  * Component used to deploy stream definitions.
@@ -16,12 +12,18 @@ import { validateDeploymentProperties } from './stream-deploy-validators';
  * @author Janne Valkealahti
  * @author Glenn Renfro
  */
+@Component({
+  selector: 'app-stream-deploy',
+  templateUrl: './stream-deploy.component.html'
+})
 export class StreamDeployComponent implements OnInit, OnDestroy {
 
   id: String;
   private sub: any;
   form: FormGroup;
   deploymentProperties = new FormControl('', validateDeploymentProperties);
+  propertiesAsMap = {};
+  busy: Subscription;
 
   /**
    * Adds deployment properties to the FormBuilder
@@ -69,19 +71,19 @@ export class StreamDeployComponent implements OnInit, OnDestroy {
   deployDefinition() {
     console.log('deployDefinition ' + this.deploymentProperties.value);
 
-    const propertiesAsMap = {};
+    this.propertiesAsMap = {};
     if (this.deploymentProperties.value) {
       for (const prop of this.deploymentProperties.value.split('\n')) {
         if (prop && prop.length > 0 && !prop.startsWith('#')) {
-          const keyValue = prop.split('=');
-          if (keyValue.length === 2) {
-            propertiesAsMap[keyValue[0]] = keyValue[1];
+          const index = prop.indexOf('=');
+          if (index > 0) {
+            this.propertiesAsMap[prop.substr(0, index)] = prop.substr(index + 1);
           }
         }
       }
     }
 
-    this.streamsService.deployDefinition(this.id, propertiesAsMap).subscribe(
+    this.busy = this.streamsService.deployDefinition(this.id, this.propertiesAsMap).subscribe(
       data => {
         this.toastyService.success('Successfully deployed stream definition "'
           + this.id + '"');

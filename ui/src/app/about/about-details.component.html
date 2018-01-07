@@ -1,7 +1,7 @@
 <h1 [ngBusy]="busy">About Details</h1>
 <h2>Data Flow Server Implementation</h2>
 
-<h2 *ngIf="!dataflowVersionInfo" class="text-warning" id="serverWarningError">Error occurred when attempting to obtain about info from server.</h2>
+<h2 *ngIf="!dataflowVersionInfo" class="text-warning" id="serverWarningError">Obtaining about info from server.</h2>
 
 <div *ngIf="dataflowVersionInfo">
 <table class="table table-hover" id="dataFlowVersionTable">
@@ -38,6 +38,13 @@
     <td>
       <span *ngIf="dataflowVersionInfo.featureInfo.tasksEnabled" class="glyphicon glyphicon-ok text-success" aria-label="true" id="tasksEnabled"></span>
       <span *ngIf="!dataflowVersionInfo.featureInfo.tasksEnabled" class="glyphicon glyphicon-remove text-danger" aria-label="false" id="tasksDisabled"></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="col-xs-6">Skipper Mode</td>
+    <td>
+      <span *ngIf="dataflowVersionInfo.featureInfo.skipperEnabled" class="glyphicon glyphicon-ok text-success" aria-label="true" id="skipperEnabled"></span>
+      <span *ngIf="!dataflowVersionInfo.featureInfo.skipperEnabled" class="glyphicon glyphicon-remove text-danger" aria-label="false" id="skipperDisabled"></span>
     </td>
   </tr>
   </tbody>
@@ -91,13 +98,25 @@
 <table class="table table-hover" id="versionInformationTable">
   <tbody>
   <tr>
-    <td class="col-xs-6">Implementation</td><td>{{dataflowVersionInfo.versionInfo.implementation.version}} ({{dataflowVersionInfo.versionInfo.implementation.name}})</td>
+    <td class="col-xs-6">Implementation Version</td>
+    <td>{{dataflowVersionInfo.versionInfo.implementation.version}} ({{dataflowVersionInfo.versionInfo.implementation.name}})</td>
   </tr>
   <tr>
     <td class="col-xs-6">Core</td><td>{{dataflowVersionInfo.versionInfo.core.version}} ({{dataflowVersionInfo.versionInfo.core.name}})</td>
   </tr>
   <tr>
     <td class="col-xs-6">Dashboard</td><td>{{dataflowVersionInfo.versionInfo.dashboard.version}} ({{dataflowVersionInfo.versionInfo.dashboard.name}})</td>
+  </tr>
+  <tr>
+    <td class="col-xs-6">Shell</td><td>{{dataflowVersionInfo.versionInfo.shell.version}} ({{dataflowVersionInfo.versionInfo.shell.name}})</td>
+  </tr>
+  <tr *ngIf="dataflowVersionInfo.versionInfo.shell.checksumSha1">
+    <td class="col-xs-6">Shell Checksum Sha1</td>
+    <td>{{dataflowVersionInfo.versionInfo.shell.checksumSha1}}</td>
+  </tr>
+  <tr *ngIf="dataflowVersionInfo.versionInfo.shell.checksumSha256">
+    <td class="col-xs-6">Shell Checksum Sha256</td>
+    <td>{{dataflowVersionInfo.versionInfo.shell.checksumSha256}}</td>
   </tr>
   </tbody>
 </table>
